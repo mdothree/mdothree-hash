@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Generate UUIDs — v1 (time-based), v4 (random), or v5 (name-based SHA-1). Bulk generation supported." />
+  <link rel="canonical" href="https://hash.mdothree.com/uuid" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="UUID Generator — mdothree Hash" />
+  <meta property="og:description" content="Generate UUIDs — v1 (time-based), v4 (random), or v5 (name-based SHA-1). Bulk generation supported." />
+  <meta property="og:url" content="https://hash.mdothree.com/uuid" />
+  <meta property="og:image" content="https://mdothree.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="UUID Generator — mdothree Hash" />
+  <meta name="twitter:description" content="Generate UUIDs — v1 (time-based), v4 (random), or v5 (name-based SHA-1). Bulk generation supported." />
+  <title>UUID Generator — mdothree Hash</title>
+  <meta name="stripe-config" content='{"publishableKey":"REPLACE_WITH_STRIPE_PUBLISHABLE_KEY","priceIdMonthly":"REPLACE_WITH_STRIPE_PRICE_ID_MONTHLY","priceIdYearly":"REPLACE_WITH_STRIPE_PRICE_ID_YEARLY","portalUrl":"https://billing.stripe.com/p/login/REPLACE"}'>
+  <meta name="firebase-config" content='{"apiKey":"REPLACE_WITH_API_KEY","authDomain":"REPLACE.firebaseapp.com","projectId":"REPLACE_WITH_PROJECT_ID","storageBucket":"REPLACE.appspot.com","messagingSenderId":"REPLACE","appId":"REPLACE_WITH_APP_ID"}'>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#10B981" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" />
+  <link rel="preconnect" href="https://js.stripe.com" />
+  <link rel="preconnect" href="https://hooks.stripe.com" />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>3</a>
+    <nav class="tool-nav">
+      <a href="/">Hash</a>
+      <a href="/encode">Encode</a>
+      <a href="/uuid" class="active">UUID</a>
+      <a href="/hmac">HMAC</a>
+      <a href="/checker">Checker</a>
+      <a href="/batch">Batch</a>
+      <a href="https://mdothree.com/pro" class="pro-nav-link">★ Pro</a>
+    </nav>
+  </header>
+
+    <main class="tool-main">
+    <div class="tool-header">
+      <h1>UUID Generator</h1>
+      <p>Generate universally unique identifiers — v1 (time-based), v4 (random), or v5 (name-based).</p>
+    </div>
+    <div class="tool-body">
+      <div class="algo-selector">
+        <label class="field-label">Version</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" data-ver="v4">v4 — Random</button>
+          <button class="algo-btn" data-ver="v1">v1 — Time</button>
+          <button class="algo-btn" data-ver="v5">v5 — Name</button>
+        </div>
+      </div>
+      <div id="v5Options" class="hidden">
+        <div>
+          <label class="field-label" for="v5Name">Name</label>
+          <input type="text" id="v5Name" class="input-field" placeholder="e.g. https://example.com" />
+        </div>
+        <div>
+          <label class="field-label" for="v5Namespace">Namespace</label>
+          <select id="v5Namespace" class="input-field">
+            <option value="6ba7b810-9dad-11d1-80b4-00c04fd430c8">DNS</option>
+            <option value="6ba7b811-9dad-11d1-80b4-00c04fd430c8">URL</option>
+          </select>
+        </div>
+      </div>
+      <div class="count-row">
+        <label class="field-label">Count</label>
+        <input type="number" id="uuidCount" class="input-field input-field--narrow" value="5" min="1" max="100" / inputmode="numeric">
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" id="generateUUIDs">Generate</button>
+        <button class="btn-ghost" id="copyAllUUIDs">Copy All</button>
+        <button class="btn-ghost" id="clearUUIDs">Clear</button>
+      </div>
+      <div class="output-panel">
+        <label class="field-label">UUIDs</label>
+        <div id="uuidGrid" class="uuid-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/pages/uuid.js" type="module"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

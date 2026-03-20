@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hash multiple strings at once — one per line. Export results as CSV. Supports SHA-256, MD5, SHA-1, CRC32." />
+  <link rel="canonical" href="https://hash.mdothree.com/batch" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Batch Hash — mdothree Hash" />
+  <meta property="og:description" content="Hash multiple strings at once — one per line. Export results as CSV. Supports SHA-256, MD5, SHA-1, CRC32." />
+  <meta property="og:url" content="https://hash.mdothree.com/batch" />
+  <meta property="og:image" content="https://mdothree.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Batch Hash — mdothree Hash" />
+  <meta name="twitter:description" content="Hash multiple strings at once — one per line. Export results as CSV. Supports SHA-256, MD5, SHA-1, CRC32." />
+  <title>Batch Hash — mdothree Hash</title>
+  <meta name="stripe-config" content='{"publishableKey":"REPLACE_WITH_STRIPE_PUBLISHABLE_KEY","priceIdMonthly":"REPLACE_WITH_STRIPE_PRICE_ID_MONTHLY","priceIdYearly":"REPLACE_WITH_STRIPE_PRICE_ID_YEARLY","portalUrl":"https://billing.stripe.com/p/login/REPLACE"}'>
+  <meta name="firebase-config" content='{"apiKey":"REPLACE_WITH_API_KEY","authDomain":"REPLACE.firebaseapp.com","projectId":"REPLACE_WITH_PROJECT_ID","storageBucket":"REPLACE.appspot.com","messagingSenderId":"REPLACE","appId":"REPLACE_WITH_APP_ID"}'>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#10B981" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" />
+  <link rel="preconnect" href="https://js.stripe.com" />
+  <link rel="preconnect" href="https://hooks.stripe.com" />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>3</a>
+    <nav class="tool-nav">
+      <a href="/">Hash</a>
+      <a href="/encode">Encode</a>
+      <a href="/uuid">UUID</a>
+      <a href="/hmac">HMAC</a>
+      <a href="/checker">Checker</a>
+      <a href="/batch" class="active">Batch</a>
+      <a href="https://mdothree.com/pro" class="pro-nav-link">★ Pro</a>
+    </nav>
+  </header>
+
+    <main class="tool-main">
+    <div class="tool-header">
+      <h1>Batch Hash</h1>
+      <p>Hash multiple strings at once — one per line. <strong>Pro feature.</strong></p>
+    </div>
+    <div class="tool-body">
+      <div>
+        <label class="field-label" for="batchInput">Input (one value per line)</label>
+        <textarea id="batchInput" class="big-input" rows="8" placeholder="apple&#10;banana&#10;cherry&#10;…" spellcheck="false"></textarea>
+      </div>
+      <div class="algo-selector">
+        <label class="field-label">Algorithm</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" data-algo="SHA256">SHA-256</button>
+          <button class="algo-btn" data-algo="SHA512">SHA-512</button>
+          <button class="algo-btn" data-algo="MD5">MD5</button>
+          <button class="algo-btn" data-algo="SHA1">SHA-1</button>
+          <button class="algo-btn" data-algo="CRC32">CRC32</button>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" id="batchBtn">Hash All</button>
+        <button class="btn-ghost" id="copyCSVBtn">Copy as CSV</button>
+        <button class="btn-ghost" id="clearBatchBtn">Clear</button>
+      </div>
+      <div class="output-panel" id="batchResults" hidden>
+        <label class="field-label">Results</label>
+        <table class="result-table" id="batchTable">
+          <thead>
+            <tr><th>#</th><th>Input</th><th>Hash</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="js/pages/batch.js" type="module"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

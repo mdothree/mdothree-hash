@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Verify file or text integrity by comparing against a known hash value. Supports SHA-256, SHA-512, MD5, and more." />
+  <link rel="canonical" href="https://hash.mdothree.com/checker" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Hash Checker — mdothree Hash" />
+  <meta property="og:description" content="Verify file or text integrity by comparing against a known hash value. Supports SHA-256, SHA-512, MD5, and more." />
+  <meta property="og:url" content="https://hash.mdothree.com/checker" />
+  <meta property="og:image" content="https://mdothree.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hash Checker — mdothree Hash" />
+  <meta name="twitter:description" content="Verify file or text integrity by comparing against a known hash value. Supports SHA-256, SHA-512, MD5, and more." />
+  <title>Hash Checker — mdothree Hash</title>
+  <meta name="stripe-config" content='{"publishableKey":"REPLACE_WITH_STRIPE_PUBLISHABLE_KEY","priceIdMonthly":"REPLACE_WITH_STRIPE_PRICE_ID_MONTHLY","priceIdYearly":"REPLACE_WITH_STRIPE_PRICE_ID_YEARLY","portalUrl":"https://billing.stripe.com/p/login/REPLACE"}'>
+  <meta name="firebase-config" content='{"apiKey":"REPLACE_WITH_API_KEY","authDomain":"REPLACE.firebaseapp.com","projectId":"REPLACE_WITH_PROJECT_ID","storageBucket":"REPLACE.appspot.com","messagingSenderId":"REPLACE","appId":"REPLACE_WITH_APP_ID"}'>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#10B981" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" />
+  <link rel="preconnect" href="https://js.stripe.com" />
+  <link rel="preconnect" href="https://hooks.stripe.com" />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>3</a>
+    <nav class="tool-nav">
+      <a href="/">Hash</a>
+      <a href="/encode">Encode</a>
+      <a href="/uuid">UUID</a>
+      <a href="/hmac">HMAC</a>
+      <a href="/checker" class="active">Checker</a>
+      <a href="/batch">Batch</a>
+      <a href="https://mdothree.com/pro" class="pro-nav-link">★ Pro</a>
+    </nav>
+  </header>
+
+    <main class="tool-main">
+    <div class="tool-header">
+      <h1>Hash Checker</h1>
+      <p>Verify text or file integrity by comparing against a known hash value. <strong>Pro feature.</strong></p>
+    </div>
+    <div class="tool-body">
+      <div class="algo-selector">
+        <label class="field-label">Mode</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" id="modeText">Text</button>
+          <button class="algo-btn" id="modeFile">File</button>
+        </div>
+      </div>
+      <div id="textPanel">
+        <label class="field-label" for="checkInput">Input Text</label>
+        <textarea id="checkInput" class="big-input" rows="4" placeholder="Enter text to verify…" spellcheck="false"></textarea>
+      </div>
+      <div id="filePanel" class="hidden">
+        <label class="field-label">File</label>
+        <div id="dropzone" class="dropzone">
+          <div class="dropzone__icon">📁</div>
+          <div class="dropzone__label">Drop a file here or <span class="dropzone__browse" id="browseBtn">browse</span></div>
+          <div id="fileInfo" class="dropzone__info"></div>
+          <input type="file" id="fileInput" class="hidden" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" for="knownHash">Known Hash</label>
+        <input type="text" id="knownHash" class="input-field input-field--mono" placeholder="Paste the hash you want to verify against…" spellcheck="false" />
+        <div class="field-hint" id="detectedAlgo"></div>
+      </div>
+      <div class="algo-selector">
+        <label class="field-label">Algorithm</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" data-algo="SHA256">SHA-256</button>
+          <button class="algo-btn" data-algo="SHA512">SHA-512</button>
+          <button class="algo-btn" data-algo="SHA384">SHA-384</button>
+          <button class="algo-btn" data-algo="SHA1">SHA-1</button>
+          <button class="algo-btn" data-algo="MD5">MD5</button>
+          <button class="algo-btn" data-algo="CRC32">CRC32</button>
+        </div>
+      </div>
+      <div class="action-row">
+        <button class="btn-primary" id="verifyBtn">Verify Hash</button>
+      </div>
+      <div class="output-panel" id="resultPanel" hidden>
+        <div id="verifyResult" class="verify-result"></div>
+        <label class="field-label">Computed Hash</label>
+        <div class="hash-output" id="computedHash"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/pages/checker.js" type="module"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

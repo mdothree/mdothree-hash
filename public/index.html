@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="stripe-config" content='{"publishableKey":"REPLACE_WITH_STRIPE_PUBLISHABLE_KEY","priceIdMonthly":"REPLACE_WITH_STRIPE_PRICE_ID_MONTHLY","priceIdYearly":"REPLACE_WITH_STRIPE_PRICE_ID_YEARLY","portalUrl":"https://billing.stripe.com/p/login/REPLACE"}'>
+  <meta name="firebase-config" content='{"apiKey":"REPLACE_WITH_API_KEY","authDomain":"REPLACE.firebaseapp.com","projectId":"REPLACE_WITH_PROJECT_ID","storageBucket":"REPLACE.appspot.com","messagingSenderId":"REPLACE","appId":"REPLACE_WITH_APP_ID"}'>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
+  <link rel="canonical" href="https://hash.mdothree.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Hash Generator — mdothree" />
+  <meta property="og:description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
+  <meta property="og:url" content="https://hash.mdothree.com/" />
+  <meta property="og:image" content="https://mdothree.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hash Generator — mdothree" />
+  <meta name="twitter:description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
+  <title>Hash Generator — mdothree</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#10B981" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" />
+  <link rel="preconnect" href="https://js.stripe.com" />
+  <link rel="preconnect" href="https://hooks.stripe.com" />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- CDN Libraries -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>3</a>
+    <nav class="tool-nav">
+      <a href="#hash" class="active">Hash</a>
+      <a href="/encode">Encode</a>
+      <a href="/uuid">UUID</a>
+      <a href="/hmac">HMAC</a>
+      <a href="/checker">Checker</a>
+      <a href="/batch">Batch</a>
+      <a href="https://mdothree.com/pro" class="pro-nav-link" style="margin-left:auto;background:linear-gradient(135deg,#10B981,#059669);color:#fff;border-radius:99px;padding:4px 12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;text-decoration:none;white-space:nowrap">★ Pro</a>
+    </nav>
+  </header>
+
+  <main class="tool-main">
+    <div class="tool-header">
+      <h1>Hash Generator</h1>
+      <p>Generate cryptographic hashes from text. All processing is done locally in your browser — nothing is sent to any server.</p>
+    </div>
+
+    <div class="tool-body">
+      <div class="input-panel">
+        <label class="field-label" for="inputText">Input Text</label>
+        <textarea id="inputText" class="big-input" placeholder="Enter text to hash…" rows="6" spellcheck="false"></textarea>
+        <div class="input-actions">
+          <button class="btn-ghost" id="clearBtn">Clear</button>
+          <button class="btn-ghost" id="sampleBtn">Sample</button>
+          <span class="char-count" id="charCount">0 characters</span>
+        </div>
+      </div>
+
+      <div class="algo-selector">
+        <label class="field-label">Algorithm</label>
+        <div class="algo-grid">
+          <button class="algo-btn active" data-algo="SHA256">SHA-256</button>
+          <button class="algo-btn" data-algo="SHA512">SHA-512</button>
+          <button class="algo-btn" data-algo="SHA1">SHA-1</button>
+          <button class="algo-btn" data-algo="SHA384">SHA-384</button>
+          <button class="algo-btn" data-algo="SHA3">SHA-3</button>
+          <button class="algo-btn" data-algo="MD5">MD5</button>
+          <button class="algo-btn" data-algo="CRC32">CRC32</button>
+          <button class="algo-btn" data-algo="BCRYPT">bcrypt</button>
+        </div>
+      </div>
+
+      <!-- bcrypt options -->
+      <div class="bcrypt-options hidden" id="bcryptOptions">
+        <label class="field-label">Salt Rounds</label>
+        <input type="range" id="saltRounds" min="4" max="14" value="10" class="slider" />
+        <span id="saltRoundsVal">10</span>
+      </div>
+
+      <div class="output-panel" id="outputPanel">
+        <div class="output-row" id="outputRow">
+          <label class="field-label">Hash Output</label>
+          <div class="hash-output" id="hashOutput">—</div>
+          <div class="output-actions">
+            <button class="btn-ghost" id="copyBtn">Copy</button>
+            <span class="output-meta" id="outputMeta"></span>
+          </div>
+        </div>
+        <!-- Show all hashes -->
+        <div id="allHashes" class="all-hashes hidden"></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-primary" id="generateBtn">Generate Hash</button>
+        <button class="btn-ghost" id="showAllBtn">Show All Algorithms</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js" type="module"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
