@@ -8,14 +8,14 @@
   <meta name="description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
   <link rel="canonical" href="https://hash.mdothree.com/" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Hash Generator — mdothree" />
+  <meta property="og:title" content="Hash Generator" />
   <meta property="og:description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
   <meta property="og:url" content="https://hash.mdothree.com/" />
-  <meta property="og:image" content="https://mdothree.com/og-image.png" />
+  <meta property="og:image" content="./og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Hash Generator — mdothree" />
+  <meta name="twitter:title" content="Hash Generator" />
   <meta name="twitter:description" content="Generate cryptographic hashes — MD5, SHA-256, SHA-512, bcrypt, and more. 100% client-side." />
-  <title>Hash Generator — mdothree</title>
+  <title>Hash Generator</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#10B981" />
@@ -33,7 +33,7 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>3</a>
+    <a class="logo" href="https://mdothree.com">m<span class="dot">.</span>three</a>
     <nav class="tool-nav">
       <a href="#hash" class="active">Hash</a>
       <a href="/encode">Encode</a>
@@ -41,7 +41,7 @@
       <a href="/hmac">HMAC</a>
       <a href="/checker">Checker</a>
       <a href="/batch">Batch</a>
-      <a href="https://mdothree.com/pro" class="pro-nav-link" style="margin-left:auto;background:linear-gradient(135deg,#10B981,#059669);color:#fff;border-radius:99px;padding:4px 12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;text-decoration:none;white-space:nowrap">★ Pro</a>
+      <a href="https://mdothree.com/pro" class="pro-nav-link">★ Pro</a>
     </nav>
   </header>
 
@@ -103,7 +103,12 @@
     </div>
   </main>
 
-  <script src="js/app.js" type="module"></script>
+  <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script src="js/app.js" type="module"></script>
 
   <script>
     if ('serviceWorker' in navigator) {
