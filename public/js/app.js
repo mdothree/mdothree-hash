@@ -30,7 +30,7 @@ const authBadge = Object.assign(document.createElement('div'), {
   style: 'position:fixed;bottom:16px;right:16px;font-size:0.72rem;color:var(--text-secondary);font-family:var(--font-mono);z-index:999',
 });
 document.body.appendChild(authBadge);
-onAuthChange(u => { authBadge.textContent = u ? '🔥 syncing' : '☁ offline'; });
+onAuthChange(u => { authBadge.textContent = u ? '● signed in' : '○ offline'; });
 ensureAnonymousUser().then(() => loadAndRenderHistory());
 
 // ---- Elements ----
