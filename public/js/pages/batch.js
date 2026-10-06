@@ -83,7 +83,7 @@ function initPage() {
       });
       tbody.appendChild(tr);
     });
-  });
+  }));
 
   document.getElementById('copyCSVBtn').addEventListener('click', async () => {
     if (!results.length) return;
