@@ -2,24 +2,21 @@
 import { generateHash }                from '../services/hashGenerator.js';
 import { withLoading, showToast as uiToast, showError } from '../utils/ui-helpers.js';
 import { copyToClipboard, showToast }  from '../utils/cryptoUtils.js';
-import { initSubscription }            from '../services/subscriptionService.js';
-import { proGate, lockElement, handleStripeReturn } from '../services/paywallUI.js';
+import { initSubscription, isProAsync } from '../services/subscriptionService.js';
+import { openUpgradeModal, handleStripeReturn } from '../services/paywallUI.js';
 import { ensureAnonymousUser }         from '../config/config.js';
+
+// Free tier can batch-hash up to this many items per run.
+// Beyond it the honest Pro gate kicks in (feature: "Batch hashing (>10 items)").
+const FREE_BATCH_LIMIT = 10;
 
 initSubscription();
 handleStripeReturn();
 ensureAnonymousUser();
 
-// Gate entire page behind Pro
-(async () => {
-  const allowed = await proGate('hash.batch');
-  if (!allowed) {
-    const body = document.querySelector('.tool-body');
-    if (body) lockElement(body, 'hash.batch', 'Batch Hashing');
-    return;
-  }
-  initPage();
-})();
+// The batch page is usable for free. No forced modal on load — we gate only
+// when a free user actually submits more than the free item limit.
+initPage();
 
 function escHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -59,12 +56,27 @@ function initPage() {
       return;
     }
 
+    // Honest gate: free users get the first FREE_BATCH_LIMIT items. Only when
+    // they exceed it do we prompt for Pro — the free path below still runs.
+    let toHash = lines;
+    if (lines.length > FREE_BATCH_LIMIT) {
+      const pro = await isProAsync();
+      if (!pro) {
+        toHash = lines.slice(0, FREE_BATCH_LIMIT);
+        uiToast(
+          `Free plan hashes the first ${FREE_BATCH_LIMIT} items — upgrade to Pro for unlimited batch hashing.`,
+          'info'
+        );
+        openUpgradeModal('hash.batch_unlimited');
+      }
+    }
+
     const tbody = document.querySelector('#batchTable tbody');
-    tbody.innerHTML = `<tr><td colspan="3" style="color:var(--text-secondary)">Processing ${lines.length} items…</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="3" style="color:var(--text-secondary)">Processing ${toHash.length} items…</td></tr>`;
     document.getElementById('batchResults').style.display = 'block';
 
     results = [];
-    for (const line of lines) {
+    for (const line of toHash) {
       const hash = await generateHash(line, currentAlgo);
       results.push({ input: line, hash });
     }
