@@ -1,5 +1,6 @@
 // services/hashGenerator.js
 // Generates cryptographic hashes using Web Crypto API + CryptoJS
+import { sha3_256 } from './sha3.js';
 
 /**
  * Map algo names to Web Crypto API names
@@ -26,15 +27,17 @@ export async function webCryptoHash(text, algo) {
 }
 
 /**
- * Generate CRC32 hash
+ * Generate CRC32 hash over the UTF-8 bytes of the input
+ * (matches zlib / `crc32` CLI and the other algorithms, which also hash UTF-8).
  * @param {string} str
  * @returns {string} hex string
  */
 export function crc32(str) {
   const table = makeCRC32Table();
+  const bytes = new TextEncoder().encode(str);
   let crc = 0xFFFFFFFF;
-  for (let i = 0; i < str.length; i++) {
-    crc = (crc >>> 8) ^ table[(crc ^ str.charCodeAt(i)) & 0xFF];
+  for (let i = 0; i < bytes.length; i++) {
+    crc = (crc >>> 8) ^ table[(crc ^ bytes[i]) & 0xFF];
   }
   return ((crc ^ 0xFFFFFFFF) >>> 0).toString(16).padStart(8, '0');
 }
@@ -70,8 +73,8 @@ export async function generateHash(text, algo, saltRounds = 10) {
       return webCryptoHash(text, WEB_CRYPTO_ALGOS[algo]);
 
     case 'SHA3':
-      // CryptoJS SHA3 (default 512-bit)
-      return CryptoJS.SHA3(text, { outputLength: 256 }).toString(CryptoJS.enc.Hex);
+      // FIPS 202 SHA3-256. (CryptoJS.SHA3 is legacy Keccak and gives different output.)
+      return sha3_256(text);
 
     case 'MD5':
       return CryptoJS.MD5(text).toString(CryptoJS.enc.Hex);

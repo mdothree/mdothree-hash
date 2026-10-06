@@ -47,13 +47,11 @@ function initPage() {
   });
 
   document.getElementById('copyHMACHex').addEventListener('click', async () => {
-    await copyToClipboard(document.getElementById('hmacHex').textContent);
-    showToast('Hex copied!');
+    showToast((await copyToClipboard(document.getElementById('hmacHex').textContent)) ? 'Hex copied!' : 'Copy failed');
   });
 
   document.getElementById('copyHMACB64').addEventListener('click', async () => {
-    await copyToClipboard(document.getElementById('hmacB64').textContent);
-    showToast('Base64 copied!');
+    showToast((await copyToClipboard(document.getElementById('hmacB64').textContent)) ? 'Base64 copied!' : 'Copy failed');
   });
 }
 

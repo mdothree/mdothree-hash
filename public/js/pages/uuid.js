@@ -2,17 +2,20 @@
 import { generateUUIDs }                from '../services/uuidGenerator.js';
 import { withLoading, showToast as uiToast, showError } from '../utils/ui-helpers.js';
 import { copyToClipboard, showToast }   from '../utils/cryptoUtils.js';
-import { initSubscription }             from '../services/subscriptionService.js';
+import { initSubscription, onSubscriptionChange } from '../services/subscriptionService.js';
 import { proBadge, handleStripeReturn } from '../services/paywallUI.js';
 import { onAuthChange }                 from '../config/config.js';
 
 initSubscription();
 handleStripeReturn();
 
-onAuthChange(u => {
+// Pro badge only for a real Pro entitlement (anonymous sign-in is not Pro).
+onSubscriptionChange(status => {
   const nav = document.querySelector('.tool-nav');
   if (!nav) return;
-  if (u && !nav.querySelector('.pro-badge')) nav.appendChild(proBadge());
+  const existing = nav.querySelector('.pro-badge');
+  if (status.isPro && !existing) nav.appendChild(proBadge());
+  else if (!status.isPro && existing) existing.remove();
 });
 
 let currentVer = 'v4';
@@ -41,8 +44,7 @@ async function gen() {
     item.className = 'uuid-item';
     item.innerHTML = `<span class="uuid-version">${currentVer}</span><span>${uuid}</span>`;
     item.addEventListener('click', async () => {
-      await copyToClipboard(uuid);
-      showToast('Copied!');
+      showToast((await copyToClipboard(uuid)) ? 'Copied!' : 'Copy failed');
     });
     grid.appendChild(item);
   });
@@ -57,8 +59,7 @@ document.getElementById('clearUUIDs').addEventListener('click', () => {
 document.getElementById('copyAllUUIDs').addEventListener('click', async () => {
   const items = [...document.querySelectorAll('.uuid-item span:last-child')].map(s => s.textContent);
   if (!items.length) return;
-  await copyToClipboard(items.join('\n'));
-  showToast(`Copied ${items.length} UUIDs!`);
+  showToast((await copyToClipboard(items.join('\n'))) ? `Copied ${items.length} UUIDs!` : 'Copy failed');
 });
 
 // Auto-generate on load

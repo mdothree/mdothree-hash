@@ -78,8 +78,7 @@ function initPage() {
         <td class="batch-hash" title="Click to copy">${hash}</td>
       `;
       tr.querySelector('.batch-hash').addEventListener('click', async () => {
-        await copyToClipboard(hash);
-        showToast('Hash copied!');
+        showToast((await copyToClipboard(hash)) ? 'Hash copied!' : 'Copy failed');
       });
       tbody.appendChild(tr);
     });
@@ -88,8 +87,7 @@ function initPage() {
   document.getElementById('copyCSVBtn').addEventListener('click', async () => {
     if (!results.length) return;
     const csv = 'input,hash\n' + results.map(r => `"${r.input}","${r.hash}"`).join('\n');
-    await copyToClipboard(csv);
-    showToast('CSV copied!');
+    showToast((await copyToClipboard(csv)) ? 'CSV copied!' : 'Copy failed');
   });
 
   document.getElementById('clearBatchBtn').addEventListener('click', () => {

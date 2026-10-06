@@ -1,12 +1,13 @@
 {
   "name": "mdothree-hash",
   "version": "1.0.0",
-  "description": "Hash generator utility \u2014 mdothree.com",
+  "description": "Hash generator utility — mdothree.com",
   "scripts": {
     "dev": "node scripts/inject-config.cjs && npx serve public",
     "build": "node scripts/inject-config.cjs",
     "start": "npx serve public",
-    "test": "node --test --experimental-vm-modules tests/hashGenerator.test.js"
+    "test": "node --test --experimental-vm-modules tests/hashGenerator.test.js tests/sha3-crc32.test.js",
+    "check": "node scripts/check-imports.mjs public/js"
   },
   "devDependencies": {
     "serve": "^14.0.0"

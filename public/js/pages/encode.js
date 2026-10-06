@@ -2,17 +2,20 @@
 import { transform }                    from '../services/encoder.js';
 import { withLoading, showToast as uiToast, showError } from '../utils/ui-helpers.js';
 import { copyToClipboard, showToast }   from '../utils/cryptoUtils.js';
-import { initSubscription }             from '../services/subscriptionService.js';
+import { initSubscription, onSubscriptionChange } from '../services/subscriptionService.js';
 import { proBadge, handleStripeReturn } from '../services/paywallUI.js';
 import { onAuthChange }                 from '../config/config.js';
 
 initSubscription();
 handleStripeReturn();
 
-onAuthChange(u => {
+// Pro badge only for a real Pro entitlement (anonymous sign-in is not Pro).
+onSubscriptionChange(status => {
   const nav = document.querySelector('.tool-nav');
   if (!nav) return;
-  if (u && !nav.querySelector('.pro-badge')) nav.appendChild(proBadge());
+  const existing = nav.querySelector('.pro-badge');
+  if (status.isPro && !existing) nav.appendChild(proBadge());
+  else if (!status.isPro && existing) existing.remove();
 });
 
 let currentFmt = 'base64';
@@ -54,8 +57,7 @@ document.getElementById('swapBtn').addEventListener('click', () => {
 document.getElementById('copyEncBtn').addEventListener('click', async () => {
   const text = document.getElementById('encOutput').textContent;
   if (!text || text === '—') return;
-  await copyToClipboard(text);
-  showToast('Copied!');
+  showToast((await copyToClipboard(text)) ? 'Copied!' : 'Copy failed');
 });
 
 // Global error boundary — catch unhandled promise rejections

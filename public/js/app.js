@@ -2,9 +2,10 @@
 
 import { generateHash, generateAllHashes } from './services/hashGenerator.js';
 import { copyToClipboard, showToast, randomString } from './utils/cryptoUtils.js';
+// NOTE: hash input is intentionally NOT written to Firestore (the page promises
+// "nothing is sent to any server"). saveHashToHistory is no longer called.
 import {
-  saveHashToHistory, loadHashHistory, deleteHashHistoryEntry,
-  saveHashFavourite, loadHashFavourites, deleteHashFavourite,
+  loadHashHistory, deleteHashHistoryEntry,
 } from './services/hashStorage.js';
 import { onAuthChange, ensureAnonymousUser } from './config/config.js';
 import { initSubscription, onSubscriptionChange } from './services/subscriptionService.js';
@@ -64,7 +65,7 @@ algoButtons.forEach(btn => {
     btn.classList.add('active');
     currentAlgo = algo;
     bcryptOpts?.classList.toggle('hidden', currentAlgo !== 'BCRYPT');
-    if (inputText?.value.trim()) runHashWithHistory();
+    if (inputText?.value) runHash();
   });
 });
 
@@ -77,12 +78,20 @@ saltSlider?.addEventListener('input', () => {
 inputText?.addEventListener('input', () => {
   const len = inputText.value.length;
   charCount.textContent = `${len.toLocaleString()} character${len !== 1 ? 's' : ''}`;
-  if (!showingAll) runHash();
+  // bcrypt is slow (synchronous, up to 2^14 rounds) — only run it on "Generate", not per keystroke.
+  if (currentAlgo === 'BCRYPT') {
+    _hashSeq++;
+    hashOutput.textContent = inputText.value ? 'Press "Generate Hash" for bcrypt' : '—';
+    outputMeta.textContent = '';
+    return;
+  }
+  runHash();
 });
 
 clearBtn?.addEventListener('click', () => {
   inputText.value = '';
   charCount.textContent = '0 characters';
+  _hashSeq++;
   hashOutput.textContent = '—';
   outputMeta.textContent = '';
   allHashes.innerHTML = '';
@@ -100,17 +109,26 @@ sampleBtn?.addEventListener('click', () => {
 // ---- Generate ----
 generateBtn?.addEventListener('click', runHash);
 
+// Sequence token: async results that finish out of order must not overwrite a newer hash.
+let _hashSeq = 0;
+let _lastHash = '';
+
 async function runHash() {
+  const seq = ++_hashSeq;
   const text = inputText?.value ?? '';
-  if (!text) { hashOutput.textContent = '—'; return; }
+  _lastHash = '';
+  if (!text) { hashOutput.textContent = '—'; outputMeta.textContent = ''; return; }
 
   hashOutput.textContent = 'Generating…';
   try {
     const rounds = parseInt(saltSlider?.value ?? '10', 10);
     const hash = await generateHash(text, currentAlgo, rounds);
+    if (seq !== _hashSeq) return;
+    _lastHash = hash;
     hashOutput.textContent = hash;
     outputMeta.textContent = `${hash.length} chars`;
   } catch (e) {
+    if (seq !== _hashSeq) return;
     hashOutput.textContent = 'Error: ' + e.message;
     outputMeta.textContent = '';
   }
@@ -118,8 +136,8 @@ async function runHash() {
 
 // ---- Copy ----
 copyBtn?.addEventListener('click', async () => {
-  const text = hashOutput.textContent;
-  if (!text || text === '—') return;
+  const text = _lastHash; // only copy a real hash, never "Generating…" / "Error: …"
+  if (!text) return;
   const ok = await copyToClipboard(text);
   showToast(ok ? 'Copied to clipboard!' : 'Copy failed');
 });
@@ -152,8 +170,8 @@ showAllBtn?.addEventListener('click', async () => {
         <div class="hash-row-value" title="Click to copy">${hash}</div>
       `;
       row.querySelector('.hash-row-value').addEventListener('click', async () => {
-        await copyToClipboard(hash);
-        showToast(`${algo} hash copied!`);
+        const ok = await copyToClipboard(hash);
+        showToast(ok ? `${algo} hash copied!` : 'Copy failed');
       });
       allHashes.appendChild(row);
     });
@@ -190,7 +208,8 @@ async function loadAndRenderHistory() {
       <div class="hash-row-value" title="Click to copy">${item.hash}</div>
     `;
     row.querySelector('.hash-row-value').addEventListener('click', async () => {
-      await copyToClipboard(item.hash); showToast('Hash copied!');
+      const ok = await copyToClipboard(item.hash);
+      showToast(ok ? 'Hash copied!' : 'Copy failed');
     });
     row.querySelector('.del-hist-btn').addEventListener('click', async e => {
       e.stopPropagation();
@@ -201,29 +220,5 @@ async function loadAndRenderHistory() {
   });
 }
 
-// ---- Save to history after generate ----
-const _origRunHash = runHash;
-async function runHashWithHistory() {
-  const text = document.getElementById('inputText')?.value ?? '';
-  if (!text) { document.getElementById('hashOutput').textContent = '—'; return; }
-  document.getElementById('hashOutput').textContent = 'Generating…';
-  try {
-    const rounds = parseInt(document.getElementById('saltRounds')?.value ?? '10', 10);
-    const hash   = await generateHash(text, currentAlgo, rounds);
-    document.getElementById('hashOutput').textContent = hash;
-    document.getElementById('outputMeta').textContent = `${hash.length} chars`;
-    // Persist to Firebase
-    await saveHashToHistory({ input: text, algo: currentAlgo, hash, inputLength: text.length });
-    await loadAndRenderHistory();
-  } catch (e) {
-    document.getElementById('hashOutput').textContent = 'Error: ' + e.message;
-  }
-}
-
-// Patch generate button to use Firebase-saving version
-document.getElementById('generateBtn')?.addEventListener('click', runHashWithHistory);
-document.getElementById('inputText')?.addEventListener('input', () => {
-  const text = document.getElementById('inputText')?.value ?? '';
-  if (!text || currentAlgo === 'BCRYPT') return;
-  runHashWithHistory();
-});
+// (Removed: a second set of listeners re-ran every hash and wrote the raw input to
+// Firestore on each keystroke. Hashing is now done once, by runHash, entirely locally.)

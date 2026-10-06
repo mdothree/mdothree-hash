@@ -41,7 +41,7 @@
       <a href="/hmac">HMAC</a>
       <a href="/checker">Checker</a>
       <a href="/batch">Batch</a>
-      <a href="https://mdothree.com/pro" class="pro-nav-link">★ Pro</a>
+      <a href="https://mdothree.com/pro.html" class="pro-nav-link">★ Pro</a>
     </nav>
   </header>
 
@@ -69,7 +69,7 @@
           <button class="algo-btn" data-algo="SHA512">SHA-512</button>
           <button class="algo-btn" data-algo="SHA1">SHA-1</button>
           <button class="algo-btn" data-algo="SHA384">SHA-384</button>
-          <button class="algo-btn" data-algo="SHA3">SHA-3</button>
+          <button class="algo-btn" data-algo="SHA3" title="SHA3-256 (FIPS 202)">SHA3-256</button>
           <button class="algo-btn" data-algo="MD5">MD5</button>
           <button class="algo-btn" data-algo="CRC32">CRC32</button>
           <button class="algo-btn" data-algo="BCRYPT">bcrypt</button>
@@ -81,6 +81,12 @@
         <label class="field-label">Salt Rounds</label>
         <input type="range" id="saltRounds" min="4" max="14" value="10" class="slider" />
         <span id="saltRoundsVal">10</span>
+      </div>
+
+      <!-- Controls sit above the result they produce -->
+      <div class="action-row">
+        <button class="btn-primary" id="generateBtn">Generate Hash</button>
+        <button class="btn-ghost" id="showAllBtn">Show All Algorithms</button>
       </div>
 
       <div class="output-panel" id="outputPanel">
@@ -96,10 +102,6 @@
         <div id="allHashes" class="all-hashes hidden"></div>
       </div>
 
-      <div class="action-row">
-        <button class="btn-primary" id="generateBtn">Generate Hash</button>
-        <button class="btn-ghost" id="showAllBtn">Show All Algorithms</button>
-      </div>
     </div>
   </main>
 
