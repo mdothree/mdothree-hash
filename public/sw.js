@@ -1,7 +1,7 @@
 // sw.js — Service Worker (generated — do not edit directly)
 // Cache-first for assets, network-first for HTML navigation.
 
-const CACHE_NAME = 'hash-v3';
+const CACHE_NAME = 'hash-v4';
 
 const PRECACHE_URLS = [
   '/',
@@ -11,7 +11,7 @@ const PRECACHE_URLS = [
   '/checker',
   '/batch',
   '/favicon.svg',
-  '/manifest.json',
+  '/site.webmanifest',
   '/css/styles.css',
   '/js/app.js'
 ];

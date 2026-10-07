@@ -2,32 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hash.mdothree.com/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/encode</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/uuid</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/hmac</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/checker</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/batch</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-10-07</lastmod>
   </url>
 </urlset>
