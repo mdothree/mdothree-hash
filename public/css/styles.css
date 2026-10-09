@@ -66,7 +66,15 @@ body {
 .tool-nav {
   display: flex;
   gap: 4px;
+  /* HASH-MOBILE-NAV-OVERFLOW: contain the nav so narrow screens scroll the
+     links sideways instead of widening the whole page. */
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
+.logo { flex-shrink: 0; }
+.tool-nav a { white-space: nowrap; flex-shrink: 0; }
 
 .tool-nav a {
   font-size: 0.82rem;
@@ -457,3 +465,12 @@ body {
 .field-hint { margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary); }
 
 .pro-nav-link { margin-left: auto; display: inline-flex; align-items: center; justify-content: center; gap: 4px; line-height: 1; background: linear-gradient(135deg,#10B981,#059669); color: #fff; border-radius: 99px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; white-space: nowrap; }
+
+/* Mobile nav (HASH-MOBILE-NAV-OVERFLOW + tool-nav sideways-scroller WARN):
+   wrap the tool links onto a second row so every tool (and ★ Pro) is
+   visible at 375px instead of widening the page or hiding in a scroller. */
+@media (max-width: 640px) {
+  .site-header { height: auto; min-height: 56px; flex-wrap: wrap; row-gap: 4px; padding-top: 8px; padding-bottom: 8px; overflow-x: visible; }
+  .tool-nav { flex: 1 1 100%; flex-wrap: wrap; overflow-x: visible; min-width: 0; }
+  .tool-nav a { padding: 8px 10px; }
+}
