@@ -64,7 +64,7 @@ function initPage() {
       if (!pro) {
         toHash = lines.slice(0, FREE_BATCH_LIMIT);
         uiToast(
-          `Free plan hashes the first ${FREE_BATCH_LIMIT} items — upgrade to Pro for unlimited batch hashing.`,
+          `Free plan hashes the first ${FREE_BATCH_LIMIT} items — unlimited batch hashing is planned for Pro (coming soon).`,
           'info'
         );
         openUpgradeModal('hash.batch_unlimited');
