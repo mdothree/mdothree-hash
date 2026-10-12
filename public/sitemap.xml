@@ -2,26 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hash.mdothree.com/</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/encode</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/uuid</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/hmac</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/checker</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://hash.mdothree.com/batch</loc>
-    <lastmod>2026-10-07</lastmod>
   </url>
 </urlset>
