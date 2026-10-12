@@ -3,13 +3,13 @@
    ============================================================ */
 
 :root {
-  --emerald: #10B981;
-  --emerald-dark: #059669;
+  --emerald: #047857; /* A11Y-003: 5.5:1 on white as text and as a button fill (was #10B981 2.5:1) */
+  --emerald-dark: #065F46;
   --emerald-light: #34D399;
   --slate-900: #0F172A;
   --slate-800: #1E293B;
   --slate-700: #334155;
-  --slate-500: #64748B;
+  --slate-500: #475569; /* A11Y-003: muted text 6.9:1 on #F1F5F9 (was 4.34:1) */
   --slate-300: #CBD5E1;
   --slate-100: #F1F5F9;
   --white: #FFFFFF;
@@ -490,3 +490,9 @@ nav.footer-legal { display: flex; flex-wrap: wrap; justify-content: center; alig
 nav.footer-legal a { color: #64748B; text-decoration: none; }
 nav.footer-legal a:hover,
 nav.footer-legal a:focus-visible { color: var(--text-primary, #0F172A); text-decoration: underline; }
+
+/* A11Y-013 / MOBILE-TAPTARGETS-MDOTHREE-TOOLS: 44px-tall tap targets for the footer and phone tool nav */
+nav.footer-legal a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+@media (max-width: 640px) {
+  .tool-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+}
