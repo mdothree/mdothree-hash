@@ -49,7 +49,11 @@ export async function saveHashToHistory(entry) {
  */
 export async function loadHashHistory(count = 20) {
   const user = getFirebaseAuth().currentUser;
-  if (!user) return _memHistory.slice(0, count);
+  // XB-005: nothing writes hash history to Firestore any more (app.js never calls
+  // saveHashToHistory), so a guest query is always empty. Skipping it means a guest
+  // page load opens no Firestore Listen channel (WebKit reported its teardown as a
+  // page error).
+  if (!user || user.isAnonymous) return _memHistory.slice(0, count);
   try {
     const db = getDB();
     const q  = query(
