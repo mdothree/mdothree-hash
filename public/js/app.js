@@ -7,7 +7,7 @@ import { copyToClipboard, showToast, randomString } from './utils/cryptoUtils.js
 import {
   loadHashHistory, deleteHashHistoryEntry,
 } from './services/hashStorage.js';
-import { ensureAnonymousUser } from './config/config.js';
+import { restoreSession } from './config/config.js';
 import { initSubscription, onSubscriptionChange } from './services/subscriptionService.js';
 import { proGate, lockElement, openUpgradeModal, handleStripeReturn, proBadge } from './services/paywallUI.js';
 
@@ -24,7 +24,7 @@ onSubscriptionChange(status => {
   else if (!status.isPro && existing) existing.remove();
 });
 
-ensureAnonymousUser().then(() => loadAndRenderHistory());
+restoreSession().then(() => loadAndRenderHistory());
 
 // ---- Elements ----
 const inputText   = document.getElementById('inputText');

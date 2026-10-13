@@ -4,7 +4,7 @@ import { withLoading, showToast as uiToast, showError } from '../utils/ui-helper
 import { copyToClipboard, showToast }  from '../utils/cryptoUtils.js';
 import { initSubscription, isProAsync } from '../services/subscriptionService.js';
 import { openUpgradeModal, handleStripeReturn } from '../services/paywallUI.js';
-import { ensureAnonymousUser }         from '../config/config.js';
+import { restoreSession }         from '../config/config.js';
 
 // Free tier can batch-hash up to this many items per run.
 // Beyond it the honest Pro gate kicks in (feature: "Batch hashing (>10 items)").
@@ -12,7 +12,7 @@ const FREE_BATCH_LIMIT = 10;
 
 initSubscription();
 handleStripeReturn();
-ensureAnonymousUser();
+restoreSession();
 
 // The batch page is usable for free. No forced modal on load — we gate only
 // when a free user actually submits more than the free item limit.
