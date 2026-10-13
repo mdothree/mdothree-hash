@@ -1,7 +1,7 @@
 {
   "name": "mdothree Hash Generator",
   "short_name": "Hash Tools",
-  "description": "Generate cryptographic hashes such as MD5, SHA-1, SHA-256, and SHA-512 instantly. Hashing runs client-side in your browser; bcrypt is available with Pro.",
+  "description": "Generate SHA-256, SHA-512, SHA-384, SHA-1, SHA3-256, MD5, and CRC32 hashes instantly. Hashing runs client-side in your browser; bcrypt is available with Pro.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

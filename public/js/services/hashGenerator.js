@@ -33,8 +33,16 @@ export async function webCryptoHash(text, algo) {
  * @returns {string} hex string
  */
 export function crc32(str) {
+  return crc32Bytes(new TextEncoder().encode(str));
+}
+
+/**
+ * CRC32 over raw bytes (files)
+ * @param {Uint8Array} bytes
+ * @returns {string} hex string
+ */
+export function crc32Bytes(bytes) {
   const table = makeCRC32Table();
-  const bytes = new TextEncoder().encode(str);
   let crc = 0xFFFFFFFF;
   for (let i = 0; i < bytes.length; i++) {
     crc = (crc >>> 8) ^ table[(crc ^ bytes[i]) & 0xFF];

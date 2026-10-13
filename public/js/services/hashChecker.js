@@ -1,7 +1,7 @@
 // services/hashChecker.js
 // Verify file or text hashes by comparing against a known hash
 
-import { generateHash, webCryptoHash } from './hashGenerator.js';
+import { generateHash, webCryptoHash, crc32Bytes } from './hashGenerator.js';
 
 /**
  * Verify a string against a known hash
@@ -32,11 +32,13 @@ export async function verifyTextHash(text, knownHash, algo, saltRounds = 10) {
 /**
  * Hash a File object using Web Crypto API
  * @param {File} file
- * @param {string} algo - 'SHA-256' | 'SHA-512' | 'SHA-384' | 'SHA-1'
+ * @param {string} algo - 'SHA-256' | 'SHA-512' | 'SHA-384' | 'SHA-1' | 'MD5' | 'CRC32'
  * @returns {Promise<string>} hex hash
  */
 export async function hashFile(file, algo = 'SHA-256') {
   const buffer = await file.arrayBuffer();
+  if (algo === 'MD5') return CryptoJS.MD5(CryptoJS.lib.WordArray.create(new Uint8Array(buffer))).toString(CryptoJS.enc.Hex);
+  if (algo === 'CRC32') return crc32Bytes(new Uint8Array(buffer));
   const hashBuffer = await crypto.subtle.digest(algo, buffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');

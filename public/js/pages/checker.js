@@ -104,7 +104,7 @@ function initPage() {
         result = await verifyTextHash(text, knownHash, currentAlgo);
       } else {
         if (!selectedFile) { alert('Please select a file'); return; }
-        const algoMap = { SHA256: 'SHA-256', SHA512: 'SHA-512', SHA384: 'SHA-384', SHA1: 'SHA-1' };
+        const algoMap = { SHA256: 'SHA-256', SHA512: 'SHA-512', SHA384: 'SHA-384', SHA1: 'SHA-1', MD5: 'MD5', CRC32: 'CRC32' };
         result = await verifyFileHash(selectedFile, knownHash, algoMap[currentAlgo] || 'SHA-256');
       }
 
