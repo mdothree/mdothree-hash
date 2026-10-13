@@ -7,7 +7,7 @@ import { copyToClipboard, showToast, randomString } from './utils/cryptoUtils.js
 import {
   loadHashHistory, deleteHashHistoryEntry,
 } from './services/hashStorage.js';
-import { onAuthChange, ensureAnonymousUser } from './config/config.js';
+import { ensureAnonymousUser } from './config/config.js';
 import { initSubscription, onSubscriptionChange } from './services/subscriptionService.js';
 import { proGate, lockElement, openUpgradeModal, handleStripeReturn, proBadge } from './services/paywallUI.js';
 
@@ -17,19 +17,13 @@ handleStripeReturn();
 
 // Show Pro badge in header when subscribed
 onSubscriptionChange(status => {
-  const nav = document.querySelector('.tool-nav');
+  const nav = document.querySelector('.mdo-actions');
   if (!nav) return;
   const existing = nav.querySelector('.pro-badge');
-  if (status.isPro && !existing) nav.appendChild(proBadge());
+  if (status.isPro && !existing) nav.insertBefore(proBadge(), nav.querySelector('[data-mdo-account]'));
   else if (!status.isPro && existing) existing.remove();
 });
 
-// Auth status badge
-const authBadge = Object.assign(document.createElement('div'), {
-  style: 'position:fixed;bottom:16px;right:16px;font-size:0.72rem;color:var(--text-secondary);font-family:var(--font-mono);z-index:999',
-});
-document.body.appendChild(authBadge);
-onAuthChange(u => { authBadge.textContent = (u && !u.isAnonymous) ? '● signed in' : ''; }); // anon guests see no badge
 ensureAnonymousUser().then(() => loadAndRenderHistory());
 
 // ---- Elements ----
