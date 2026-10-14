@@ -71,6 +71,7 @@
       <p>Generate cryptographic hashes from text. All processing is done locally in your browser — nothing is sent to any server.</p>
     </div>
 
+    <p class="mdo-load-status" id="mdoLoadStatus" role="status">Loading tool…</p>
     <div class="tool-body">
       <div class="input-panel">
         <label class="field-label" for="inputText">Input Text</label>
@@ -105,14 +106,14 @@
 
       <!-- Controls sit above the result they produce -->
       <div class="action-row">
-        <button class="btn-primary" id="generateBtn">Generate Hash</button>
-        <button class="btn-ghost" id="showAllBtn">Show All Algorithms</button>
+        <button class="btn-primary" id="generateBtn" disabled aria-busy="true" data-mdo-wait>Generate Hash</button>
+        <button class="btn-ghost" id="showAllBtn" disabled aria-busy="true" data-mdo-wait>Show All Algorithms</button>
       </div>
 
       <div class="output-panel" id="outputPanel">
         <div class="output-row" id="outputRow">
           <label class="field-label">Hash Output</label>
-          <div class="hash-output" id="hashOutput">—</div>
+          <div class="hash-output" id="hashOutput" role="status" aria-live="polite" aria-atomic="true">—</div>
           <div class="output-actions">
             <button class="btn-ghost" id="copyBtn">Copy</button>
             <span class="output-meta" id="outputMeta"></span>

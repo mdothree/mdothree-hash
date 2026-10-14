@@ -215,3 +215,7 @@ async function loadAndRenderHistory() {
 
 // (Removed: a second set of listeners re-ran every hash and wrote the raw input to
 // Firestore on each keystroke. Hashing is now done once, by runHash, entirely locally.)
+
+// HID-017: the page starts with "Loading tool…" and disabled actions; release them now that the handlers are bound.
+document.querySelectorAll('[data-mdo-wait]').forEach(el => { el.disabled = false; el.removeAttribute('aria-busy'); el.removeAttribute('data-mdo-wait'); });
+document.getElementById('mdoLoadStatus')?.remove();
