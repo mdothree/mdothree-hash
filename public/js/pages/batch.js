@@ -6,7 +6,7 @@ import { initSubscription, isProAsync } from '../services/subscriptionService.js
 import { openUpgradeModal, handleStripeReturn } from '../services/paywallUI.js';
 import { restoreSession }         from '../config/config.js';
 
-// Free tier can batch-hash up to this many items per run.
+// Without Pro, the open tool can batch-hash up to this many items per run.
 // Beyond it the honest Pro gate kicks in (feature: "Batch hashing (>10 items)").
 const FREE_BATCH_LIMIT = 10;
 
@@ -14,8 +14,8 @@ initSubscription();
 handleStripeReturn();
 restoreSession();
 
-// The batch page is usable for free. No forced modal on load — we gate only
-// when a free user actually submits more than the free item limit.
+// The batch page is usable without sign-up. No forced modal on load — we gate only
+// when a visitor without Pro submits more than the open item limit.
 initPage();
 
 function escHtml(str) {
@@ -56,15 +56,15 @@ function initPage() {
       return;
     }
 
-    // Honest gate: free users get the first FREE_BATCH_LIMIT items. Only when
-    // they exceed it do we prompt for Pro — the free path below still runs.
+    // Honest gate: visitors without Pro get the first FREE_BATCH_LIMIT items. Only when
+    // they exceed it do we prompt for Pro — the open path below still runs.
     let toHash = lines;
     if (lines.length > FREE_BATCH_LIMIT) {
       const pro = await isProAsync();
       if (!pro) {
         toHash = lines.slice(0, FREE_BATCH_LIMIT);
         uiToast(
-          `Without Pro: hashes up to ${FREE_BATCH_LIMIT} items at a time — unlimited batch hashing is planned for Pro (coming soon).`,
+          `Without Pro: up to ${FREE_BATCH_LIMIT} lines at a time, so the first ${FREE_BATCH_LIMIT} were hashed. Larger batches are part of mdothree Pro.`,
           'info'
         );
         openUpgradeModal('hash.batch_unlimited');
